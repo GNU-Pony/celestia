@@ -19,7 +19,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import os
-import shlex
 from submodule import Popen, PIPE
 
 
@@ -50,7 +49,7 @@ def update(directory):
                         elif appendix == 'version':   appendix = version
                         elif appendix == 'filename':  appendix = filename
                         else:
-                            appendix = shlex.split(appendix)
+                            appendix = ['bash', '-c', appendix]
                             appendix = Popen(appendix, stdout = PIPE, cwd = directory).communicate()[0]
                         bufstack[-2] += appendix.replace('€', '€\0')
                     else:
