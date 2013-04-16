@@ -25,14 +25,21 @@ from submodule import Popen, PIPE
 def update(directory):
     try:
         os.chdir(directory)
+        curver = None
+        with open('curver', 'rb') as file:
+            curver = file.read()
+        curver = curver.decode('utf-8', 'replace').replace('\n', '')
         output = Popen(['./version'], stdout = PIPE, cwd = directory).communicate()[0]
-        output = output.split(' ')
+        output = output.replace('\n', '').split(' ')
         if len(output) == 2:
             (name, version) = output
+            if version == curver:
+                return
             filename = '%s/%s' % ('${SPOOL}', name)
             data = None
             with open('template', 'rb') as file:
-                file.read().decode('utf-8', 'replace')
+                data = file.read()
+            data = data.decode('utf-8', 'replace')
             bufstack = ['']
             for c in data:
                 if c == '{':
