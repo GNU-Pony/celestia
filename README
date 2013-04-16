@@ -2,3 +2,45 @@ Automated spike-scroll updater.
 
 You should set up Celestia as cron job.
 
+
+Celestia creates new package distributions, when a package listed in /etc/celestia/list,
+and saves them in /var/spool/celestia.
+
+When Celestia has updated a package it prints a line to its standard out with the format
+"$pkgname $pkgver $spooledfile".
+
+You may want to pipe Celestia's output to a program that can detect it and handle the
+spooled file, or alternatively notify you so you can handle it manually.
+
+/etc/celestia/list should list directories each containing data for Celestia to use the
+update a package.
+
+The created package file ($spooledfile) will be named /var/spool/celestia/$pkgname, when
+it has been created ./finalise in the package data directory is invoked if existing with
+the arguments $pkgname, $pkgver and $spooledfile, you can in that command rename the file
+or create additional files needed for distribution.
+
+In a package directory listed in /etc/celestia/list, there must be a command named
+./version and a file named template. ./version is a command that should be quite
+(on stdout) on failure and on success print to stdout "$pkgname $pkgver", where $pkgver
+is the detected lasted version. The file template is a template used to create the
+package distribution file, it contains €{} placeholders, €{} is just a ‘€’, €{<} is
+a ‘{’, €{<} is a ‘}’, €{name} is a $pkgname, €{version} is $pkgver and ${filename} is
+the file created to /var/spool/celestia. For any other value X in €{X} it is interpreted
+as a bash command that itself can contains its own €{} placeholders.
+
+For example, if you have "http://example.org/example-$pkgver.tar.xz" as a source, you
+can, to get it new version's sha3sum you can use this in its place:
+
+    €{wget "http://example.org/example-€{pkgver}.tar.xz" -O - | sha3sum | cut -d ' ' -f 1}
+
+    For simplicity you may want to create the following command as /usr/local/sbin/wsha3sum:
+
+    	#!/bin/sh
+    	wget "$1" -O - | sha3sum | cut -d ' ' -f 1
+
+    and just use: €{wsha3sum "http://example.org/example-€{pkgver}.tar.xz"}
+
+Celestia will always ahev the directory listed in /etc/celestia/list that it is working
+on as its current working directory.
+
