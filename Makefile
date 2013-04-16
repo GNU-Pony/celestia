@@ -43,7 +43,6 @@ uninstall:
 
 depends:
 	@echo 'python>=3'
-	@echo 'bash'
 
 clean:
 	rm celestia || true
