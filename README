@@ -1,6 +1,6 @@
 Automated spike-scroll updater.
 
-You should set up Celestia as cron job.
+You should set up Celestia as a cron job.
 
 
 Celestia creates new package distributions, when a package listed in
