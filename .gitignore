@@ -23,4 +23,5 @@ _/
 *.tp
 *.vr
 *.install
-
+__pycache__/
+*.pyc
