@@ -35,8 +35,8 @@ For any other value X in €{X} it is interpreted as a bash command
 that itself can contains its own €{} placeholders.
 
 For example, if you have "http://example.org/example-$pkgver.tar.xz"
-as a source, you can, to get it new version's sha3sum you can use
-this in its place:
+as a source, to get it new version's sha3sum you can use this in its
+place:
 
     €{wget "http://example.org/example-€{pkgver}.tar.xz" -O - |
     sha3sum | cut -d ' ' -f 1}

@@ -25,10 +25,11 @@ from submodule import Popen, PIPE
 def update(directory):
     try:
         os.chdir(directory)
-        curver = None
-        with open('curver', 'rb') as file:
-            curver = file.read()
-        curver = curver.decode('utf-8', 'replace').replace('\n', '')
+        curver = ''
+        if os.path.exists('.curver'):
+            with open('.curver', 'rb') as file:
+                curver = file.read()
+            curver = curver.decode('utf-8', 'replace').replace('\n', '')
         output = Popen(['./version'], stdout = PIPE, cwd = directory).communicate()[0]
         output = output.replace('\n', '').split(' ')
         if len(output) == 2:
