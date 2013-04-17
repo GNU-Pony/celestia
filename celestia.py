@@ -59,9 +59,10 @@ def update(directory):
                             appendix = ['bash', '-c', appendix]
                             appendix = Popen(appendix, stdout = PIPE, cwd = directory).communicate()[0]
                         bufstack[-2] += appendix.replace('€', '€\0')
+                        bufstack.pop()
                     elif (len(bufstack) > 1):
                         bufstack[-2] += bufstack[-1]
-                    bufstack.pop()
+                        bufstack.pop()
                 else:
                     bufstack[-1] += c
             buf = ''
