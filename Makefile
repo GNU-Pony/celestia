@@ -58,14 +58,15 @@ install:
 	install -m644 -T celestia.info.gz "$(DESTDIR)$(PREFIX)$(DATA)"/info "$(PKGNAME).info.gz"
 
 uninstall:
-	rm -r '$(DESTDIR)$(SPOOL)'
-	rm '$(DESTDIR)$(LIST)'
-	rm '$(DESTDIR)$(LIST)~' || true
+	rm -r -- '$(DESTDIR)$(SPOOL)'
+	rm -- '$(DESTDIR)$(LIST)'
+	rm -- '$(DESTDIR)$(LIST)~' || true
 	rmdir "$$(dirname '$(DESTDIR)/$(LIST)')" || true
-	rm '$(DESTDIR)$(LICENSES)/$(PKGNAME)/COPYING'
-	rm '$(DESTDIR)$(LICENSES)/$(PKGNAME)/LICENSE'
-	rmdir '$(DESTDIR)$(LICENSES)/$(PKGNAME)'
-	rm '$(DESTDIR)$(PREFIX)$(BIN)/$(COMMAND)'
+	rm -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)/COPYING'
+	rm -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)/LICENSE'
+	rmdir -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)'
+	rm -- '$(DESTDIR)$(PREFIX)$(BIN)/$(COMMAND)'
+	rm -- '$(DESTDIR)$(PREFIX)$(DATA)"/info "$(PKGNAME).info.gz'
 
 depends:
 	@echo 'python>=3'
