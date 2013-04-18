@@ -73,6 +73,8 @@ def update(directory):
                 file.write(buf.replace('\0', '').encode('utf-8'))
             if os.path.exists('./finalise'):
                 Popen(['./finalise', name, version, filename, '${SPOOL}'], cwd = directory).wait()
+            with open(".curver", 'wb') as file:
+                file.write(version.encode('utf-8'))
             print('%s %s %s' % (name, version, filename))
     except:
         pass
