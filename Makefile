@@ -54,24 +54,24 @@ install:
 	install -m644 COPYING LICENSE '$(DESTDIR)$(LICENSES)/$(PKGNAME)'
 	install -dm755 '$(DESTDIR)$(PREFIX)$(BIN)'
 	install -m755 celestia '$(DESTDIR)$(PREFIX)$(BIN)$(COMMAND)'
-	install -dm755 '$(DESTDIR)$(PREFIX)$(BIN)/info'
-	install -m644 -T celestia.info.gz "$(DESTDIR)$(PREFIX)$(DATA)"/info "$(PKGNAME).info.gz"
+	install -dm755 '$(DESTDIR)$(PREFIX)$(DATA)/info'
+	install -m644 celestia.info.gz "$(DESTDIR)$(PREFIX)$(DATA)/info/$(PKGNAME).info.gz"
 
 uninstall:
 	rm -r -- '$(DESTDIR)$(SPOOL)'
 	rm -- '$(DESTDIR)$(LIST)'
-	rm -- '$(DESTDIR)$(LIST)~' || true
-	rmdir "$$(dirname '$(DESTDIR)/$(LIST)')" || true
+	-rm -- '$(DESTDIR)$(LIST)~'
+	-rmdir "$$(dirname '$(DESTDIR)/$(LIST)')"
 	rm -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)/COPYING'
 	rm -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)/LICENSE'
 	rmdir -- '$(DESTDIR)$(LICENSES)/$(PKGNAME)'
 	rm -- '$(DESTDIR)$(PREFIX)$(BIN)/$(COMMAND)'
-	rm -- '$(DESTDIR)$(PREFIX)$(DATA)"/info "$(PKGNAME).info.gz'
+	rm -- '$(DESTDIR)$(PREFIX)$(DATA)/info/$(PKGNAME).info.gz'
 
 depends:
 	@echo 'python>=3'
 	@echo 'bash'
 
 clean:
-	rm -f celestia {*,*/*}.{aux,cp,fn,info,ky,log,pdf,ps,dvi,pg,toc,tp,vr,install} || true
+	-rm -f celestia {*,*/*}.{aux,cp,fn,info,ky,log,pdf,ps,dvi,pg,toc,tp,vr,install}
 
