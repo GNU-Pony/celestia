@@ -24,30 +24,42 @@ from submodule import Popen, PIPE
 
 def update(directory):
     try:
+        # `cd` into the package
         os.chdir(directory)
+        
+        # Get the current version of the package
         curver = ''
         if os.path.exists('.curver'):
             with open('.curver', 'rb') as file:
                 curver = file.read()
             curver = curver.decode('utf-8', 'replace').replace('\n', '')
+        
+        # Get package name and the latest available version of the package
         output = Popen(['./version'], stdout = PIPE, cwd = directory).communicate()[0]
         output = output.replace('\n', '').split(' ')
+        
         if len(output) == 2:
             (name, version) = output
-            if version == curver:
+            if version == curver: # Do not continue if the package has not been updated
                 return
+            
+            # Get package scroll file
             filename = '%s/%s' % ('${SPOOL}', name)
+            
+            # Load scroll template
             data = None
             with open('template', 'rb') as file:
                 data = file.read()
             data = data.decode('utf-8', 'replace')
+            
+            # Fill out template
             bufstack = ['']
             for c in data:
                 if c == '{':
                     bufstack.append('{')
                 else if c == '}':
                     bufstack[-1] += c
-                    if (len(bufstack) > 1) and (bufstack[-2].endswith('€')):
+                    if (len(bufstack) > 1) and bufstack[-2].endswith('€'):
                         bufstack[-2] = bufstack[-2][:-1]
                         appendix = bufstack[-1][1 : -1]
                         if   appendix == '<':  appendix = '{'
@@ -69,12 +81,20 @@ def update(directory):
             buf = ''
             for elem in bufstack:
                 buf += elem
+            
+            # Save scroll
             with open(filename, 'wb') as file:
                 file.write(buf.replace('\0', '').encode('utf-8'))
+            
+            # Execute ./finalise incase a scroll would need to do anything extra
             if os.path.exists('./finalise'):
                 Popen(['./finalise', name, version, filename, '${SPOOL}'], cwd = directory).wait()
+            
+            # Save the current version
             with open(".curver", 'wb') as file:
                 file.write(version.encode('utf-8'))
+            
+            # Inform about the update
             print('%s %s %s' % (name, version, filename))
     except:
         pass
