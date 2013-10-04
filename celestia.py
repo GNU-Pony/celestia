@@ -57,7 +57,7 @@ def update(directory):
             for c in data:
                 if c == '{':
                     bufstack.append('{')
-                else if c == '}':
+                elif c == '}':
                     bufstack[-1] += c
                     if (len(bufstack) > 1) and bufstack[-2].endswith('€'):
                         bufstack[-2] = bufstack[-2][:-1]
