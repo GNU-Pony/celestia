@@ -22,6 +22,18 @@ import os
 from subprocess import Popen, PIPE
 
 
+
+def spawn(command, directory):
+    proc = Popen(['./version'], stdout = PIPE, cwd = directory)
+    proc.wait()
+    if proc.returncode != 0:
+        raise Exception()
+    out = proc.stdout.read().decode('utf-8', 'error')
+    while out.endswith('\n'):
+        out = out[:-1]
+    return out
+
+
 def update(directory):
     try:
         # `cd` into the package
@@ -32,11 +44,10 @@ def update(directory):
         if os.path.exists('.curver'):
             with open('.curver', 'rb') as file:
                 curver = file.read()
-            curver = curver.decode('utf-8', 'replace').replace('\n', '')
+            curver = curver.decode('utf-8', 'error').replace('\n', '')
         
         # Get package name and the latest available version of the package
-        output = Popen(['./version'], stdout = PIPE, cwd = directory).communicate()[0]
-        output = output.replace('\n', '').split(' ')
+        output = spawn(['./version'], directory).split(' ')
         
         if len(output) == 2:
             (name, version) = output
@@ -69,8 +80,7 @@ def update(directory):
                         elif appendix == 'version':   appendix = version
                         elif appendix == 'filename':  appendix = filename
                         else:
-                            appendix = ['bash', '-c', appendix]
-                            appendix = Popen(appendix, stdout = PIPE, cwd = directory).communicate()[0]
+                            appendix = spawn(['bash', '-c', appendix], directory)
                         bufstack[-2] += appendix.replace('€', '€\0')
                         bufstack.pop()
                     elif (len(bufstack) > 1):
@@ -93,6 +103,7 @@ def update(directory):
             # Save the current version
             with open(".curver", 'wb') as file:
                 file.write(version.encode('utf-8'))
+                file.flush()
             
             # Inform about the update
             print('%s %s %s' % (name, version, filename))
