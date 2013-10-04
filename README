@@ -51,6 +51,6 @@ place:
     
 	€{wsha3sum "http://example.org/example-€{pkgver}.tar.xz"}
 
-Celestia will always ahev the directory listed in /etc/celestia/list
+Celestia will always have the directory listed in /etc/celestia/list
 that it is working on as its current working directory.
 
