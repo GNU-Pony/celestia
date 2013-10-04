@@ -82,5 +82,5 @@ depends:
 
 .PHONY: clean
 clean:
-	-rm -f celestia {*,*/*}.{aux,cp,fn,info,ky,log,pdf,ps,dvi,pg,toc,tp,vr,install}
+	-rm -f celestia {*,*/*}.{aux,cp,fn,info,ky,log,pdf,ps,dvi,pg,toc,tp,vr,install,gz}
 
